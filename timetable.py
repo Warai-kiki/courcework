@@ -49,33 +49,33 @@ class Main(tk.Frame):
         btn_refresh.pack(side=tk.RIGHT)
 
         # table
-        self.tree = ttk.Treeview(self, column=('ID', 'name', 'monday', 'tuesday', 'wendsday', 'thursday', 'friday', 'saturday'), height=30,
-                                 show='headings')
+        self.tree_time = ttk.Treeview(self, column=('ID', 'name', 'monday', 'tuesday', 'wendsday', 'thursday', 'friday', 'saturday'), height=30,
+                                      show='headings')
 
-        self.tree.column('ID', width=50, anchor=tk.CENTER)
-        self.tree.column('name', width=260, anchor=tk.CENTER)
-        self.tree.column('monday', width=150, anchor=tk.CENTER)
-        self.tree.column('tuesday', width=150, anchor=tk.CENTER)
-        self.tree.column('wendsday', width=150, anchor=tk.CENTER)
-        self.tree.column('thursday', width=150, anchor=tk.CENTER)
-        self.tree.column('friday', width=150, anchor=tk.CENTER)
-        self.tree.column('saturday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('ID', width=50, anchor=tk.CENTER)
+        self.tree_time.column('name', width=260, anchor=tk.CENTER)
+        self.tree_time.column('monday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('tuesday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('wendsday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('thursday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('friday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('saturday', width=150, anchor=tk.CENTER)
 
-        self.tree.heading('ID', text='ID')
-        self.tree.heading('name', text='Бібліотекар')
-        self.tree.heading('monday', text='Понеділок')
-        self.tree.heading('tuesday', text='Вівторок')
-        self.tree.heading('wendsday', text='Середа')
-        self.tree.heading('thursday', text='Черверг')
-        self.tree.heading('friday', text='Пятниця')
-        self.tree.heading('saturday', text='Субота')
+        self.tree_time.heading('ID', text='ID')
+        self.tree_time.heading('name', text='Бібліотекар')
+        self.tree_time.heading('monday', text='Понеділок')
+        self.tree_time.heading('tuesday', text='Вівторок')
+        self.tree_time.heading('wendsday', text='Середа')
+        self.tree_time.heading('thursday', text='Черверг')
+        self.tree_time.heading('friday', text='Пятниця')
+        self.tree_time.heading('saturday', text='Субота')
 
 
-        self.tree.pack(side=tk.LEFT)
+        self.tree_time.pack(side=tk.LEFT)
 
-        scroll = tk.Scrollbar(self, command=self.tree.yview)
+        scroll = tk.Scrollbar(self, command=self.tree_time.yview)
         scroll.pack(side=tk.LEFT, fill=tk.Y)
-        self.tree.configure(yscrollcommand=scroll.set)
+        self.tree_time.configure(yscrollcommand=scroll.set)
 
 
 
@@ -85,26 +85,26 @@ class Main(tk.Frame):
 
     def view_timetable(self):
         self.db_daytime.db_timetable_conn.execute('''SELECT * FROM timetable''')
-        [self.tree.delete(i) for i in self.tree.get_children()] # отображение на экране
-        [self.tree.insert('', 'end', values=row) for row in self.db_daytime.db_timetable_conn.fetchall()]
+        [self.tree_time.delete(i) for i in self.tree_time.get_children()] # отображение на экране
+        [self.tree_time.insert('', 'end', values=row) for row in self.db_daytime.db_timetable_conn.fetchall()]
 
     def update_timetable(self, name, monday, tuesday, wendsday, thursday, friday, saturday):
         self.db_daytime.db_timetable.execute('''UPDATE timetable SET name, monday, tuesday, wendsday, thursday, friday, saturday WHERE id=?''',
-                                         (name, monday, tuesday, wendsday, thursday, friday, saturday, self.tree.set(self.tree.selection()[0], '#1')))
+                                             (name, monday, tuesday, wendsday, thursday, friday, saturday, self.tree_time.set(self.tree_time.selection()[0], '#1')))
         self.db_daytime.db_timetable.commit()
         self.view_timetable()
 
     def delete_libros(self):
-        for selection_item in self.tree.selection():
-            self.db_daytime.db_timetable.execute('''DELETE FROM books WHERE ID=?''', (self.tree.set(selection_item, '#1')))
+        for selection_item in self.tree_time.selection():
+            self.db_daytime.db_timetable.execute('''DELETE FROM books WHERE ID=?''', (self.tree_time.set(selection_item, '#1')))
         self.db_daytime.db_timetable.commit()
         self.view_timetable()
 
     def search_among_librarians(self, author):
         author = ('%' + author + '%',)
         self.db_daytime.db_timetable_conn.execute('''SELECT * FROM timetable WHERE author LIKE ?''', author)
-        [self.tree.delete(i) for i in self.tree.get_children()]
-        [self.tree.insert('', 'end', values=row) for row in self.db_daytime.db_timetable_conn.fetchall()]
+        [self.tree_time.delete(i) for i in self.tree_time.get_children()]
+        [self.tree_time.insert('', 'end', values=row) for row in self.db_daytime.db_timetable_conn.fetchall()]
 
     def open_add_libro(self):
         AddTimeLib()
@@ -208,7 +208,7 @@ class UpdateTimeInfo(AddTimeLib):
 
     def default_data(self):
         self.db_daytime.db_timetable_conn.execute('''SELECT * FROM timetable WHERE ID=?''',
-                                            (self.view.tree.set(self.view.tree.selection()[0],'#1')))
+                                                  (self.view.tree_time.set(self.view.tree_time.selection()[0], '#1')))
         row = self.db_daytime.db_timetable_conn.fetchone()
         self.entry_name.insert(0,row[1])
         if row[2] != '09:00-14:00':

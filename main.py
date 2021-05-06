@@ -9,7 +9,10 @@ class Main(tk.Frame):
         super().__init__(root)
         self.init_main()
         self.db_books = db_books
+        self.db_daytime = db_timetable
+        self.view_timetable()
         self.view_catalog()
+
         self.root = root
 
     def init_main(self):
@@ -72,6 +75,34 @@ class Main(tk.Frame):
         scroll.pack(side=tk.LEFT, fill=tk.Y)
         self.tree.configure(yscrollcommand=scroll.set)
 
+        # table
+        self.tree_time = ttk.Treeview(self.tab_2, column=(
+        'ID', 'name', 'monday', 'tuesday', 'wendsday', 'thursday', 'friday', 'saturday'), height=30,
+                                 show='headings')
+
+        self.tree_time.column('ID', width=50, anchor=tk.CENTER)
+        self.tree_time.column('name', width=260, anchor=tk.CENTER)
+        self.tree_time.column('monday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('tuesday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('wendsday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('thursday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('friday', width=150, anchor=tk.CENTER)
+        self.tree_time.column('saturday', width=150, anchor=tk.CENTER)
+
+        self.tree_time.heading('ID', text='ID')
+        self.tree_time.heading('name', text='Бібліотекар')
+        self.tree_time.heading('monday', text='Понеділок')
+        self.tree_time.heading('tuesday', text='Вівторок')
+        self.tree_time.heading('wendsday', text='Середа')
+        self.tree_time.heading('thursday', text='Черверг')
+        self.tree_time.heading('friday', text='Пятниця')
+        self.tree_time.heading('saturday', text='Субота')
+
+        self.tree_time.pack(side=tk.LEFT)
+
+        scroll = tk.Scrollbar(self, command=self.tree_time.yview)
+        scroll.pack(side=tk.LEFT, fill=tk.Y)
+        self.tree_time.configure(yscrollcommand=scroll.set)
 
 
     def catalog(self, name, author, type, category, readinghall):
@@ -82,6 +113,15 @@ class Main(tk.Frame):
         self.db_books.db_books_conn.execute('''SELECT * FROM books''')
         [self.tree.delete(i) for i in self.tree.get_children()] # отображение на экране
         [self.tree.insert('', 'end', values=row) for row in self.db_books.db_books_conn.fetchall()]
+
+    def timetable(self, name, monday, tuesday, wendsday, thursday, friday, saturday):
+        self.db_daytime.insert_timetable(name, monday, tuesday, wendsday, thursday, friday, saturday)
+        self.view_timetable()
+
+    def view_timetable(self):
+        self.db_daytime.db_timetable_conn.execute('''SELECT * FROM timetable''')
+        [self.tree_time.delete(i) for i in self.tree_time.get_children()] # отображение на экране
+        [self.tree_time.insert('', 'end', values=row) for row in self.db_daytime.db_timetable_conn.fetchall()]
 
     def search_in_catalog(self, name):
         name = ('%' + name + '%',)
@@ -104,65 +144,6 @@ class Main(tk.Frame):
 
     def open_search_dialog_auth(self):
         SearchAuthors()
-
-
-# Нове надходження
-class Child(tk.Toplevel):
-    def __init__(self):
-        super().__init__(root)
-        self.init_child()
-        self.view = app
-
-    def init_child(self):
-        self.title('Нове надходження')
-        self.geometry('550x450+550+200')
-        self.resizable(False, False)
-
-        # назви полів вводу
-        label_name = tk.Label(self, text='Назва')
-        label_name.place(x=50, y=50)
-        label_author = tk.Label(self, text='Автор')
-        label_author.place(x=50, y=80)
-        label_type = tk.Label(self, text='Тип')
-        label_type.place(x=50, y=110)
-        label_catagory = tk.Label(self, text='Категорія')
-        label_catagory.place(x=50, y=140)
-        label_hall = tk.Label(self, text='Читальний зал')
-        label_hall.place(x=50, y=170)
-
-        self.entry_name = ttk.Entry(self)
-        self.entry_name.place(x=200, y=50)
-
-        self.entry_author = ttk.Entry(self)
-        self.entry_author.place(x=200, y=80)
-
-        self.combobox_type = ttk.Combobox(self, value=[u'Книга', u'Журнал'])
-        self.combobox_type.current(0)
-        self.combobox_type.place(x=200, y=110)
-
-        self.combobox_catagory = ttk.Combobox(self, value=[u'Детективи', u'Дитяче', u'Іноземна класика', u'Історія',
-                                                           u'Мода', u'Наукове', u'Психологія', u'Українська класика',
-                                                           u'Фантастика', u'Фентезі', u'Філософія'])
-        self.combobox_catagory.current(0)
-        self.combobox_catagory.place(x=200, y=140)
-
-        self.combobox_hall = ttk.Combobox(self, value=[u'№ 1', u'№ 2', u'№ 3', u'№ 4', u'№ 5'])
-        self.combobox_hall.current(0)
-        self.combobox_hall.place(x=200, y=170)
-
-        '''btn_cancel = ttk.Button(self, text='Out'))
-        btn_cancel.place(x=300, y=80)'''  # кнопка выхода
-
-        self.btn_add = ttk.Button(self, text='Додати')
-        self.btn_add.place(x=220, y=200)
-        self.btn_add.bind('<Button-1>', lambda event: self.view.catalog(self.entry_name.get(), self.entry_author.get(),
-                                                                         self.combobox_type.get(),
-                                                                         self.combobox_catagory.get(),
-                                                                         self.combobox_hall.get()))
-        self.btn_add.bind('<Button-1>', lambda event: self.destroy(), add='+')
-
-        self.grab_set()
-        self.focus_set()
 
 #
 class Child_login(tk.Toplevel):
@@ -278,9 +259,23 @@ class DataBaseBooks:
                                    (name, author, type, category, readinghall))
         self.db_books_c.commit()
 
+# база даних для розкладу
+class DataBaseTimetable:
+    def __init__(self):
+        self.db_timetable = sqlite3.connect('timetable.db')
+        self.db_timetable_conn = self.db_timetable.cursor()
+        self.db_timetable_conn.execute('''CREATE TABLE IF NOT EXISTS timetable (id integer primary key, name text, monday text, tuesday text, wendsday text, thursday text, friday text, saturday text)''')
+        self.db_timetable.commit()
+
+    def insert_timetable(self, name, monday, tuesday, wendsday, thursday, friday, saturday):
+        self.db_timetable_conn.execute('''INSERT INTO timetable(name, monday, tuesday, wendsday, thursday, friday, saturday) VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                                   (name, monday, tuesday, wendsday, thursday, friday, saturday))
+        self.db_timetable.commit()
+
 if __name__ == "__main__":
     root = tk.Tk()
     db_books = DataBaseBooks()
+    db_timetable = DataBaseTimetable()
     app = Main(root)
     app.pack()
     root.title("Tiny Library")
