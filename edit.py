@@ -15,8 +15,8 @@ class Main(tk.Frame):
 
         self.view_orders()
         self.view_timetable()
-        self.view_librarians()
-        self.view_readers()
+        self.view_librarians_acc()
+        self.view_readers_acc()
         self.view_catalog()
 
         self.root = root
@@ -66,7 +66,7 @@ class Main(tk.Frame):
         # delete button for librarians
         self.delete_img = tk.PhotoImage(file='delete_160.png')
         btn_delete = tk.Button(self.tab_1_lib, text='Видалити\nбібліотекаря', bg='#D19440', bd=1, image=self.delete_img,
-                               compound=tk.TOP, command=self.delete_librarian)
+                               compound=tk.TOP, command=self.delete_librarian_acc)
         btn_delete.place(x=0, y=404)
         # searching for librarians
         self.search_people = tk.PhotoImage(file='author_search_80.png')
@@ -76,7 +76,7 @@ class Main(tk.Frame):
         # refreshing button for librarians
         self.refrech_img = tk.PhotoImage(file='refresh_80.png')
         btn_refresh_lib = tk.Button(self.tab_1_lib, text='Оновити', bg='#D19440', bd=1, image=self.refrech_img,
-                                    compound=tk.TOP, command=self.view_librarians)
+                                    compound=tk.TOP, command=self.view_librarians_acc)
         btn_refresh_lib.place(x=1160, y=130)
 
         # update button for readers
@@ -87,7 +87,7 @@ class Main(tk.Frame):
         # delete button for readers
         btn_delete_reader = tk.Button(self.tab_2_lib, text='Видалити\nчитача', bg='#D19440', bd=1,
                                       image=self.delete_img,
-                                      compound=tk.TOP, command=self.delete_readers)
+                                      compound=tk.TOP, command=self.delete_readers_acc)
         btn_delete_reader.place(x=0, y=204)
         # searching for readers
         btn_search_reader = tk.Button(self.tab_2_lib, text='Пошук читача', bg='#D19440', bd=1, image=self.search_people,
@@ -95,7 +95,7 @@ class Main(tk.Frame):
         btn_search_reader.place(x=1160, y=4)
         # refreshing button for readers
         btn_refresh = tk.Button(self.tab_2_lib, text='Оновити', bg='#D19440', bd=1, image=self.refrech_img,
-                                compound=tk.TOP, command=self.view_readers)
+                                compound=tk.TOP, command=self.view_readers_acc)
         btn_refresh.place(x=1160, y=130)
 
         # adding book button pic
@@ -134,7 +134,7 @@ class Main(tk.Frame):
         btn_edit_dialog.place(x=0, y=194)
         # delete button to timetable
         btn_delete = tk.Button(self.tab_4_lib, text='Видалити', bg='#D19440', bd=1, image=self.delete_img,
-                               compound=tk.TOP, command=self.delete_libros)
+                               compound=tk.TOP, command=self.delete_libros_time)
         btn_delete.place(x=0, y=384)
 
         # searching librarian to timetable
@@ -270,31 +270,31 @@ class Main(tk.Frame):
         self.tree_time.configure(yscrollcommand=scroll.set)
 
         # table for order
-        self.tree = ttk.Treeview(self.tab_5_lib, column=('ID', 'name', 'book', 'user_id', 'took', 'need_return', 'status'),
+        self.tree_orders = ttk.Treeview(self.tab_5_lib, column=('ID', 'name', 'book', 'user_id', 'took', 'need_return', 'status'),
                                  height=30,
                                  show='headings')
 
-        self.tree.column('ID', width=50, anchor=tk.CENTER)
-        self.tree.column('name', width=250, anchor=tk.CENTER)
-        self.tree.column('book', width=250, anchor=tk.CENTER)
-        self.tree.column('user_id', width=100, anchor=tk.CENTER)
-        self.tree.column('took', width=100, anchor=tk.CENTER)
-        self.tree.column('need_return', width=100, anchor=tk.CENTER)
-        self.tree.column('status', width=100, anchor=tk.CENTER)
+        self.tree_orders.column('ID', width=50, anchor=tk.CENTER)
+        self.tree_orders.column('name', width=250, anchor=tk.CENTER)
+        self.tree_orders.column('book', width=250, anchor=tk.CENTER)
+        self.tree_orders.column('user_id', width=100, anchor=tk.CENTER)
+        self.tree_orders.column('took', width=100, anchor=tk.CENTER)
+        self.tree_orders.column('need_return', width=100, anchor=tk.CENTER)
+        self.tree_orders.column('status', width=100, anchor=tk.CENTER)
 
-        self.tree.heading('ID', text='ID')
-        self.tree.heading('name', text='Читач')
-        self.tree.heading('book', text='Книга/Журнал')
-        self.tree.heading('user_id', text='ID користувача')
-        self.tree.heading('took', text='Дата видачі')
-        self.tree.heading('need_return', text='Дата повернення')
-        self.tree.heading('status', text='Статус')
+        self.tree_orders.heading('ID', text='ID')
+        self.tree_orders.heading('name', text='Читач')
+        self.tree_orders.heading('book', text='Книга/Журнал')
+        self.tree_orders.heading('user_id', text='ID користувача')
+        self.tree_orders.heading('took', text='Дата видачі')
+        self.tree_orders.heading('need_return', text='Дата повернення')
+        self.tree_orders.heading('status', text='Статус')
 
-        self.tree.place(x=170, y=4, height=670)
+        self.tree_orders.place(x=170, y=4, height=670)
 
-        scroll = tk.Scrollbar(self, command=self.tree.yview)
+        scroll = tk.Scrollbar(self, command=self.tree_orders.yview)
         scroll.place(x=1160, y=4, height=670)
-        self.tree.configure(yscrollcommand=scroll.set)
+        self.tree_orders.configure(yscrollcommand=scroll.set)
 
 
     def catalog(self, name, author, type, category, readinghall):
@@ -330,59 +330,59 @@ class Main(tk.Frame):
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db_books.db_books_conn.fetchall()]
 
-    def readers(self, name, email, password):
+    def readers_acc(self, name, email, password):
         self.db_readers.insert_readers(name, email, password)
-        self.view_readers()
+        self.view_readers_acc()
 
-    def view_readers(self):
+    def view_readers_acc(self):
         self.db_readers.db_readers_conn.execute('''SELECT * FROM readers''')
         [self.tree_readers.delete(i) for i in self.tree_readers.get_children()]  # отображение на экране
         [self.tree_readers.insert('', 'end', values=row) for row in self.db_readers.db_readers_conn.fetchall()]
 
-    def librarians(self, name, email, password):
+    def librarians_acc(self, name, email, password):
         self.db_librarians.insert_librarians(name, email, password)
-        self.view_librarians()
+        self.view_librarians_acc()
 
-    def view_librarians(self):
+    def view_librarians_acc(self):
         self.db_librarians.db_librarians_conn.execute('''SELECT * FROM librarians''')
         [self.tree_libras.delete(i) for i in self.tree_libras.get_children()]  # отображение на экране
         [self.tree_libras.insert('', 'end', values=row) for row in self.db_librarians.db_librarians_conn.fetchall()]
 
-    def update_librarian(self, name, email, password):
+    def update_librarian_acc(self, name, email, password):
         self.db_librarians.db_librarians_conn.execute('''UPDATE librarians SET name=?, email=?, password=?''',
                                                       (name, email, password,
                                                        self.tree_libras.set(self.tree_libras.selection()[0], '#1')))
         self.db_librarians.db_librarians_conn.commit()
-        self.view_librarians()
+        self.view_librarians_acc()
 
-    def delete_librarian(self):
+    def delete_librarian_acc(self):
         for selection_item in self.tree_libras.selection():
             self.db_librarians.db_librarians_conn.execute('''DELETE FROM librarians WHERE ID=?''',
                                                           (self.tree_libras.set(selection_item, '#1')))
         self.db_librarians.db_librarians_conn.commit()
-        self.view_librarians()
+        self.view_librarians_acc()
 
-    def update_readers(self, name, email, password):
+    def update_readers_acc(self, name, email, password):
         self.db_readers.db_readers_conn.execute('''UPDATE readers SET name=?, email=?, password=?''',
                                                 (name, email, password,
                                                  self.tree_readers.set(self.tree_readers.selection()[0], '#1')))
         self.db_readers.db_readers_conn.commit()
-        self.view_readers()
+        self.view_readers_acc()
 
-    def delete_readers(self):
+    def delete_readers_acc(self):
         for selection_item in self.tree_readers.selection():
             self.db_readers.db_readers_conn.execute('''DELETE FROM readers WHERE ID=?''',
                                                     (self.tree_readers.set(selection_item, '#1')))
         self.db_readers.db_readers_conn.commit()
-        self.view_readers()
+        self.view_readers_acc()
 
-    def search_among_librarians(self, name):
+    def search_among_librarians_acc(self, name):
         name = ('%' + name + '%',)
         self.db_librarians.db_librarians_conn.execute('''SELECT * FROM librarians WHERE name LIKE ?''', name)
         [self.tree_libras.delete(i) for i in self.tree_libras.get_children()]
         [self.tree_libras.insert('', 'end', values=row) for row in self.db_librarians.db_librarians_conn.fetchall()]
 
-    def search_among_readers(self, name):
+    def search_among_readers_acc(self, name):
         name = ('%' + name + '%',)
         self.db_readers.db_readers_conn.execute('''SELECT * FROM readers WHERE name LIKE ?''', name)
         [self.tree_readers.delete(i) for i in self.tree_readers.get_children()]
@@ -403,7 +403,7 @@ class Main(tk.Frame):
         self.db_daytime.db_timetable.commit()
         self.view_timetable()
 
-    def delete_libros(self):
+    def delete_libros_time(self):
         for selection_item in self.tree_time.selection():
             self.db_daytime.db_timetable.execute('''DELETE FROM timetable WHERE ID=?''', (self.tree_time.set(selection_item, '#1')))
         self.db_daytime.db_timetable.commit()
@@ -421,44 +421,44 @@ class Main(tk.Frame):
 
     def view_orders(self):
         self.db_order.db_orders_conn.execute('''SELECT * FROM orders''')
-        [self.tree.delete(i) for i in self.tree.get_children()] # отображение на экране
-        [self.tree.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
+        [self.tree_orders.delete(i) for i in self.tree_orders.get_children()] # отображение на экране
+        [self.tree_orders.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
 
     def update_order(self, name, book, user_id, took, need_return, status):
-        self.db_order.db_orders.execute('''UPDATE orders SET name=?, book=?, user_id=?, took=?, need_return=?, status=? WHERE id=?''',
-                                        (name, book, user_id, took, need_return, status, self.tree.set(self.tree.selection()[0], '#1')))
+        self.db_order.db_orders.execute('''UPDATE orders SET name=?, book=?, user_id=?, took=?, need_return=?, status=? WHERE ID=?''',
+                                        (name, book, user_id, took, need_return, status, self.tree_orders.set(self.tree_orders.selection()[0], '#1')))
         self.db_order.db_orders.commit()
         self.view_orders()
 
     def delete_order(self):
-        for selection_item in self.tree.selection():
-            self.db_order.db_orders.execute('''DELETE FROM orders WHERE ID=?''', (self.tree.set(selection_item, '#1')))
+        for selection_item in self.tree_orders.selection():
+            self.db_order.db_orders.execute('''DELETE FROM orders WHERE ID=?''', (self.tree_orders.set(selection_item, '#1')))
         self.db_order.db_orders.commit()
         self.view_orders()
 
     def search_in_ord_catalog(self, name):
         name = ('%' + name + '%',)
         self.db_order.db_orders_conn.execute('''SELECT * FROM orders WHERE name LIKE ?''', name)
-        [self.tree.delete(i) for i in self.tree.get_children()]
-        [self.tree.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
+        [self.tree_orders.delete(i) for i in self.tree_orders.get_children()]
+        [self.tree_orders.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
 
     def search_among_orders_status(self, status):
         status = ('%' + status + '%',)
         self.db_order.db_orders_conn.execute('''SELECT * FROM orders WHERE author LIKE ?''', status)
-        [self.tree.delete(i) for i in self.tree.get_children()]
-        [self.tree.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
+        [self.tree_orders.delete(i) for i in self.tree_orders.get_children()]
+        [self.tree_orders.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
 
     def search_among_dates(self, date):
         date = ('%' + date + '%',)
         self.db_order.db_orders_conn.execute('''SELECT * FROM orders WHERE took LIKE ?''', date)
-        [self.tree.delete(i) for i in self.tree.get_children()]
-        [self.tree.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
+        [self.tree_orders.delete(i) for i in self.tree_orders.get_children()]
+        [self.tree_orders.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
 
     def search_among_need_to_back(self, date):
         date = ('%' + date + '%',)
         self.db_order.db_orders_conn.execute('''SELECT * FROM orders WHERE need_return LIKE ?''', date)
-        [self.tree.delete(i) for i in self.tree.get_children()]
-        [self.tree.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
+        [self.tree_orders.delete(i) for i in self.tree_orders.get_children()]
+        [self.tree_orders.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
 
     def open_add_order(self):
         AddOrder()
@@ -720,7 +720,7 @@ class SearchLibrarians(tk.Toplevel):
 
         btn_search = ttk.Button(self, text='Пошук')
         btn_search.place(x=105, y=50)
-        btn_search.bind('<Button-1>', lambda event: self.view.search_among_librarians(self.entry_search_2.get()))
+        btn_search.bind('<Button-1>', lambda event: self.view.search_among_librarians_acc(self.entry_search_2.get()))
         btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
 
 class SearchReaders(tk.Toplevel):
@@ -744,7 +744,7 @@ class SearchReaders(tk.Toplevel):
 
         btn_search = ttk.Button(self, text='Пошук')
         btn_search.place(x=105, y=50)
-        btn_search.bind('<Button-1>', lambda event: self.view.search_among_readers(self.entry_search_2.get()))
+        btn_search.bind('<Button-1>', lambda event: self.view.search_among_readers_acc(self.entry_search_2.get()))
         btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
 
 
@@ -797,8 +797,8 @@ class UpdateLibrariansInfo(Add_Librarian):
         self.title('Редагувати дані\nбібліотекаря')
         btn_edit = ttk.Button(self, text='Редагувати')
         btn_edit.place(x=220, y=200)
-        btn_edit.bind('<Button>', lambda event: self.view.update_librarian(self.entry_name.get(), self.entry_email.get(),
-                                                                           self.entry_password.get()))
+        btn_edit.bind('<Button>', lambda event: self.view.update_librarian_acc(self.entry_name.get(), self.entry_email.get(),
+                                                                               self.entry_password.get()))
         self.btn_add.destroy() # нужно подумать как закрыть это окно при этом нормально отредактировав
 
     def default_data(self):
@@ -819,8 +819,8 @@ class UpdateReadersInfo(Add_Librarian):
         self.title('Редагувати дані\nчитача')
         btn_edit = ttk.Button(self, text='Редагувати')
         btn_edit.place(x=220, y=200)
-        btn_edit.bind('<Button>', lambda event: self.view.update_readers(self.entry_name.get(), self.entry_email.get(),
-                                                                           self.entry_password.get()))
+        btn_edit.bind('<Button>', lambda event: self.view.update_readers_acc(self.entry_name.get(), self.entry_email.get(),
+                                                                             self.entry_password.get()))
         self.btn_add.destroy()
 
     def default_data(self):
@@ -1043,7 +1043,7 @@ class UpdateOrderInfo(AddOrder):
         super().__init__()
         self.init_edit()
         self.view = app
-        self.db_daytime = db_ordering
+        self.db_orders = db_ordering
         self.default_data()
 
     def init_edit(self):
@@ -1057,9 +1057,9 @@ class UpdateOrderInfo(AddOrder):
         self.btn_add.destroy()
 
     def default_data(self):
-        self.db_daytime.db_orders_conn.execute('''SELECT * FROM orders WHERE ID=?''',
-                                               (self.view.tree.set(self.view.tree.selection()[0],'#1')))
-        row = self.db_daytime.db_orders_conn.fetchone()
+        self.db_orders.db_orders_conn.execute('''SELECT * FROM orders WHERE ID=?''',
+                                               (self.view.tree_orders.set(self.view.tree_orders.selection()[0],'#1')))
+        row = self.db_orders.db_orders_conn.fetchone()
         self.entry_name.insert(0,row[1])
         self.entry_book.insert(0, row[2])
         self.entry_user_id.insert(0, row[3])

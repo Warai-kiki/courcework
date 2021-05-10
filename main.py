@@ -165,9 +165,14 @@ class Child_login(tk.Toplevel):
         # messagebox.showerror(title='', message='Error')
 
     def init_login(self):
-        self.geometry('450x250')
+        self.geometry('450x250+550+200')
 
         self.resizable(False, False)
+
+        self.tabs_conrol = ttk.Notebook()
+        self.tab_1 = tk.Frame(self.tabs_conrol)
+        self.tabs_conrol.add(self.tab_1, text='Вхід')
+        self.tabs_conrol.pack(fill=tk.BOTH, expand=1)
 
         self.canvas = tk.Canvas(self, height=250, width=300)
         self.canvas.pack()
@@ -183,8 +188,11 @@ class Child_login(tk.Toplevel):
         self.passwordInput = tk.Entry(self.frame, bg='#F9E7DD', show='@')
         self.passwordInput.pack()
 
-        self.btn = tk.Button(self.frame, text='Log in', bg='#79350B', command=self.btn_click)
+        self.btn = tk.Button(self.frame, text='Вхід', bg='#79350B', command=self.btn_click)
         self.btn.pack()
+
+        self.btn_registration = tk.Button(self.frame, text='Реєстрація', bg='#79350B', command=self.btn_click)
+        self.btn_registration.pack()
 
         self.grab_set()
         self.focus_set()
@@ -279,7 +287,6 @@ if __name__ == "__main__":
     app.pack()
     root.title("Tiny Library")
     root.geometry("1250x700+180+70")
-    # root.protocol('WM_DELETE_WINDOW', window_deleted)
     root.resizable(False, False)
     root.iconbitmap("library_3978.ico")
     root.mainloop()
