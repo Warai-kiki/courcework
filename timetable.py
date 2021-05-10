@@ -21,34 +21,34 @@ class Main(tk.Frame):
                                     compound=tk.TOP, image=self.add_img_2)
         btn_open_adding.pack(side=tk.LEFT)'''
 
-        # adding book button pic
+        # adding book to timetable
         self.add_img = tk.PhotoImage(file='icons8-160.png')  # adding button pic
-        btn_open_adding = tk.Button(toolbar, text='Додати книгу', command=self.open_add_libro, bg='#D19440', bd=1,
+        btn_open_adding = tk.Button(toolbar, text='Додати бібліотекаря', command=self.open_add_libro, bg='#D19440', bd=1,
                                     compound=tk.TOP, image=self.add_img)
         btn_open_adding.pack(side=tk.LEFT)
-        # update button
+        # update button to timetable
         self.update_img = tk.PhotoImage(file='edit_160_2.png')
         btn_edit_dialog = tk.Button(toolbar, text='Редагувати', bg='#D19440', bd=1, image=self.update_img,
                                     compound=tk.TOP, command=self.open_update_dialog_libr)
         btn_edit_dialog.pack(side=tk.LEFT)
-        # delete button
+        # delete button to timetable
         self.delete_img = tk.PhotoImage(file='delete_160.png')
         btn_delete = tk.Button(toolbar, text='Видалити', bg='#D19440', bd=1, image=self.delete_img,
                                compound=tk.TOP, command=self.delete_libros)
         btn_delete.pack(side=tk.LEFT)
 
-        # searching librarian
+        # searching librarian to timetable
         self.search_au_img = tk.PhotoImage(file='author_search_80.png')
         btn_search_auth = tk.Button(toolbar, text='Пошук бібліотекаря', bg='#D19440', bd=1, image=self.search_au_img,
                                compound=tk.TOP, command=self.open_search_dialog_libr)
         btn_search_auth.pack(side=tk.RIGHT)
-        # refreshing button
+        # refreshing button to timetable
         self.refrech_img = tk.PhotoImage(file='refresh_80.png')
         btn_refresh = tk.Button(toolbar, text='Оновити', bg='#D19440', bd=1, image=self.refrech_img,
                                     compound=tk.TOP, command=self.view_timetable)
         btn_refresh.pack(side=tk.RIGHT)
 
-        # table
+        # table to timetable
         self.tree_time = ttk.Treeview(self, column=('ID', 'name', 'monday', 'tuesday', 'wendsday', 'thursday', 'friday', 'saturday'), height=30,
                                       show='headings')
 
@@ -89,14 +89,14 @@ class Main(tk.Frame):
         [self.tree_time.insert('', 'end', values=row) for row in self.db_daytime.db_timetable_conn.fetchall()]
 
     def update_timetable(self, name, monday, tuesday, wendsday, thursday, friday, saturday):
-        self.db_daytime.db_timetable.execute('''UPDATE timetable SET name, monday, tuesday, wendsday, thursday, friday, saturday WHERE id=?''',
+        self.db_daytime.db_timetable.execute('''UPDATE timetable SET name=?, monday=?, tuesday=?, wendsday=?, thursday=?, friday=?, saturday=? WHERE ID=?''',
                                              (name, monday, tuesday, wendsday, thursday, friday, saturday, self.tree_time.set(self.tree_time.selection()[0], '#1')))
         self.db_daytime.db_timetable.commit()
         self.view_timetable()
 
     def delete_libros(self):
         for selection_item in self.tree_time.selection():
-            self.db_daytime.db_timetable.execute('''DELETE FROM books WHERE ID=?''', (self.tree_time.set(selection_item, '#1')))
+            self.db_daytime.db_timetable.execute('''DELETE FROM timetable WHERE ID=?''', (self.tree_time.set(selection_item, '#1')))
         self.db_daytime.db_timetable.commit()
         self.view_timetable()
 

@@ -19,43 +19,43 @@ class Main(tk.Frame):
                                     compound=tk.TOP, image=self.add_img_2)
         btn_open_adding.pack(side=tk.LEFT)'''
 
-        # adding book button pic
+        # adding book for order
         self.add_img = tk.PhotoImage(file='icons8-160.png')  # adding button pic
         btn_open_adding = tk.Button(toolbar, text='Додати книгу', command=self.open_add_order, bg='#D19440', bd=1,
                                     compound=tk.TOP, image=self.add_img)
         btn_open_adding.pack(side=tk.LEFT)
-        # update button
+        # update button for order
         self.update_img = tk.PhotoImage(file='edit_160_2.png')
         btn_edit_dialog = tk.Button(toolbar, text='Редагувати', bg='#D19440', bd=1, image=self.update_img,
                                     compound=tk.TOP, command=self.open_update_dialog_order)
         btn_edit_dialog.pack(side=tk.LEFT)
-        # delete button
+        # delete button for order
         self.delete_img = tk.PhotoImage(file='delete_160.png')
         btn_delete = tk.Button(toolbar, text='Видалити', bg='#D19440', bd=1, image=self.delete_img,
                                compound=tk.TOP, command=self.delete_order)
         btn_delete.pack(side=tk.LEFT)
-        # searching
+        # searching for order
         self.search_stat_img = tk.PhotoImage(file='search_80.png')
         btn_search_stat = tk.Button(toolbar, text='Пошук\nзаборгованостей', bg='#D19440', bd=1, image=self.search_stat_img,
                                     compound=tk.TOP, command=self.open_search_by_status)
         btn_search_stat.pack(side=tk.RIGHT)
-        # searching readers
+        # searching readers for order
         self.search_peop_img = tk.PhotoImage(file='author_search_80.png')
         btn_search_date = tk.Button(toolbar, text='Пошук\nчитача', bg='#D19440', bd=1, image=self.search_peop_img,
                                     compound=tk.TOP, command=self.open_search_dialog_order)
         btn_search_date.pack(side=tk.RIGHT)
-        #
+        # searching for order
         self.search_date_img = tk.PhotoImage(file='icons8-поиск-в-списке-80.png')
         btn_search_date = tk.Button(toolbar, text='Пошук по даті\nвидачі', bg='#D19440', bd=1, image=self.search_date_img,
                                     compound=tk.TOP, command=self.open_search_by_dates)
         btn_search_date.pack(side=tk.RIGHT)
-        # refreshing button
+        # refreshing button for order
         self.refrech_img = tk.PhotoImage(file='refresh_80.png')
         btn_refresh = tk.Button(toolbar, text='Оновити\n', bg='#D19440', bd=1, image=self.refrech_img,
                                 compound=tk.TOP, command=self.view_orders)
         btn_refresh.pack(side=tk.RIGHT)
 
-        # table
+        # table for order
         self.tree = ttk.Treeview(self, column=('ID', 'name', 'book', 'user_id', 'took', 'need_return', 'status'), height=30,
                                  show='headings')
 

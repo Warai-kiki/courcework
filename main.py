@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter.ttk import Notebook
 import sqlite3
 
 class Main(tk.Frame):
