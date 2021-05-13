@@ -10,6 +10,8 @@ class Main(tk.Frame):
         self.init_main()
         self.db_books = db_books
         self.db_daytime = db_timetable
+        self.db_order = db_ordering
+        self.view_orders()
         self.view_timetable()
         self.view_catalog()
 
@@ -25,6 +27,11 @@ class Main(tk.Frame):
                                     compound=tk.TOP, image=self.add_img_2)
         btn_open_adding.pack(side=tk.LEFT)
 
+        # adding book for order
+        self.add_img = tk.PhotoImage(file='icons8-160.png')  # adding button pic
+        btn_open_adding = tk.Button(toolbar, text='Замовити книгу', command=self.take_order, bg='#D19440', bd=1,
+                                    compound=tk.TOP, image=self.add_img)
+        btn_open_adding.pack(side=tk.LEFT)
 
         # searching books
         self.search_img = tk.PhotoImage(file='search_80.png')
@@ -135,12 +142,17 @@ class Main(tk.Frame):
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db_books.db_books_conn.fetchall()]
 
+    def orders(self, name, book, user_id, took, need_return, status):
+        self.db_order.insert_order(name, book, user_id, took, need_return, status)
+        self.view_orders()
+
+    def view_orders(self):
+        self.db_order.db_orders_conn.execute('''SELECT * FROM orders''')
+        [self.tree.delete(i) for i in self.tree.get_children()] # отображение на экране
+        [self.tree.insert('', 'end', values=row) for row in self.db_order.db_orders_conn.fetchall()]
 
     def take_order(self):
         AddOrder()
-
-    def orders(self, name, book, user_id, took, need_return, status):
-        self.db_order.insert_order(name, book, user_id, took, need_return, status)
 
     def open_search_dialog(self):
         SearchBooks()
@@ -286,10 +298,24 @@ class DataBaseTimetable:
                                    (name, monday, tuesday, wendsday, thursday, friday, saturday))
         self.db_timetable.commit()
 
+# база даних
+class DataBaseOrders:
+    def __init__(self):
+        self.db_orders = sqlite3.connect('orders.db')
+        self.db_orders_conn = self.db_orders.cursor()
+        self.db_orders_conn.execute('''CREATE TABLE IF NOT EXISTS orders (id integer primary key, name text, book text, user_id integer, took text, need_return text, status text)''')
+        self.db_orders.commit()
+
+    def insert_order(self, name, book, user_id, took, need_return, status):
+        self.db_orders_conn.execute('''INSERT INTO orders(name, book, user_id, took, need_return, status) VALUES (?, ?, ?, ?, ?, ?)''',
+                                    (name, book, user_id, took, need_return, status))
+        self.db_orders.commit()
+
 if __name__ == "__main__":
     root = tk.Tk()
     db_books = DataBaseBooks()
     db_timetable = DataBaseTimetable()
+    db_ordering = DataBaseOrders()
     app = Main(root)
     app.pack()
     root.title("Tiny Library")

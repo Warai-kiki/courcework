@@ -260,6 +260,8 @@ class Add_Librarian(tk.Toplevel):
 
         self.btn_add = ttk.Button(self, text='Додати')
         self.btn_add.place(x=220, y=140)
+        self.btn_add.bind('<Button-1>', lambda event: self.view.librarians(self.entry_name.get(), self.entry_email.get(),
+                                                                           self.entry_password.get()))
 
         self.btn_add.bind('<Button-1>', lambda event: self.destroy(), add='+')
 

@@ -9,6 +9,7 @@ class Main(tk.Frame):
         self.init_main()
         self.db_books = db_books
         self.db_daytime = db_timetable
+        self.db_readers = db_readers
         self.view_timetable()
         self.view_catalog()
 
@@ -19,10 +20,15 @@ class Main(tk.Frame):
         toolbar.pack(side=tk.TOP, fill=tk.X)
 
         # entering in the system
-        self.add_img_2 = tk.PhotoImage(file='enter-2.png')  # adding button pic
+        self.add_img_2 = tk.PhotoImage(file='enter100.png')  # adding button pic
         btn_open_adding = tk.Button(toolbar, text='Вхід', command=self.open_login, bg='#D19440', bd=1,
                                     compound=tk.TOP, image=self.add_img_2)
         btn_open_adding.pack(side=tk.LEFT)
+        # registration button
+        self.img_reg = tk.PhotoImage(file='registration100.png')  # adding button pic
+        btn_open_registr = tk.Button(toolbar, text='Реєстрація', command=self.open_registration, bg='#D19440', bd=1,
+                                    compound=tk.TOP, image=self.img_reg)
+        btn_open_registr.pack(side=tk.LEFT)
 
 
         # searching books
@@ -134,6 +140,8 @@ class Main(tk.Frame):
         [self.tree.delete(i) for i in self.tree.get_children()]
         [self.tree.insert('', 'end', values=row) for row in self.db_books.db_books_conn.fetchall()]
 
+    def open_registration(self):
+        Registration()
 
     def open_login(self):
         Child_login()
@@ -156,7 +164,7 @@ class Child_login(tk.Toplevel):
 
         if login == '' or password == '':
             info_str = f'Щось пішло не так. Спробуйте ще раз.'
-            messagebox.showinfo(title='Login', message=info_str)
+            messagebox.showinfo(title='Помилка входу', message=info_str)
         else:
             info_str = f'Дані: {str(login)}, {str(password)}'
             messagebox.showinfo(title='Login', message=info_str)
@@ -169,11 +177,6 @@ class Child_login(tk.Toplevel):
 
         self.resizable(False, False)
 
-        self.tabs_conrol = ttk.Notebook()
-        self.tab_1 = tk.Frame(self.tabs_conrol)
-        self.tabs_conrol.add(self.tab_1, text='Вхід')
-        self.tabs_conrol.pack(fill=tk.BOTH, expand=1)
-
         self.canvas = tk.Canvas(self, height=250, width=300)
         self.canvas.pack()
 
@@ -183,16 +186,69 @@ class Child_login(tk.Toplevel):
         self.title = tk.Label(self.frame, text='Авторизація', bg='#C38661', font=40)
         self.title.pack()
 
+        self.text_login = tk.Label(self.frame, text='Введіть email', bg='#C38661')
+        self.text_login.pack(),
         self.loginInput = tk.Entry(self.frame, text='login', bg='#F9E7DD')
         self.loginInput.pack()
+        self.text_pass = tk.Label(self.frame, text='Введіть пароль', bg='#C38661')
+        self.text_pass.pack(),
         self.passwordInput = tk.Entry(self.frame, bg='#F9E7DD', show='@')
         self.passwordInput.pack()
 
         self.btn = tk.Button(self.frame, text='Вхід', bg='#79350B', command=self.btn_click)
         self.btn.pack()
 
-        self.btn_registration = tk.Button(self.frame, text='Реєстрація', bg='#79350B', command=self.btn_click)
-        self.btn_registration.pack()
+        self.grab_set()
+        self.focus_set()
+
+class Registration(tk.Toplevel):
+    def __init__(self):
+        super().__init__(root)
+        self.registration()
+
+    def btn_click(self):
+        name = self.entry_name.get()
+        login = self.entry_email.get()
+        password = self.entry_password.get()
+
+        if login == '' or password == '' or name == '':
+            info_str = f'Щось пішло не так. Спробуйте ще раз.'
+            messagebox.showinfo(title='Помилка реєстрації', message=info_str)
+        else:
+            info_str = f'Ви успішно зареєстровані'
+            messagebox.showinfo(title='Login', message=info_str)
+
+    def registration(self):
+        self.title('Реєстрація')
+        self.geometry('450x250+550+200')
+        self.resizable(False, False)
+
+        file = open('readers.db', 'wb')
+
+        self.canvas = tk.Canvas(self, height=250, width=300)
+        self.canvas.pack()
+
+        self.frame = tk.Frame(self, bg='#79350B')
+        self.frame.place(relx=0.15, rely=0.15, relwidth=0.7, relheight=0.7)
+        # назви полів вводу
+        self.label_name = tk.Label(self.frame, text='ПІБ', bg='#C38661')
+        self.label_name.place(x=70, y=40)
+        self.label_email = tk.Label(self.frame, text='Email', bg='#C38661')
+        self.label_email.place(x=60, y=70)
+        self.label_password = tk.Label(self.frame, text='Пароль', bg='#C38661')
+        self.label_password.place(x=50, y=100)
+
+        self.entry_name = ttk.Entry(self.frame, text='name')
+        self.entry_name.place(x=100, y=40)
+
+        self.entry_email = ttk.Entry(self.frame, text='email')
+        self.entry_email.place(x=100, y=70)
+
+        self.entry_password = ttk.Entry(self.frame, show='@')
+        self.entry_password.place(x=100, y=100)
+
+
+        #self.btn_registr.bind('<Button-1>', lambda event: self.destroy(), add='+')
 
         self.grab_set()
         self.focus_set()
@@ -208,9 +264,6 @@ class SearchBooks(tk.Toplevel):
     def init_search(self):
         self.geometry('300x100+400+300')
         self.resizable(False,False)
-
-        #self.title = tk.Label(self.frame, text='Пошук', bg='#C38661', font=40)
-        #self.title.pack()
 
         label_search = tk.Label(self, text='Пошук видання')
         label_search.place(x=10, y=20)
@@ -279,10 +332,22 @@ class DataBaseTimetable:
                                    (name, monday, tuesday, wendsday, thursday, friday, saturday))
         self.db_timetable.commit()
 
+class DataBaseReaders:
+    def __init__(self):
+        self.db_readers = sqlite3.connect('readers.db')
+        self.db_readers_conn = self.db_readers.cursor()
+        self.db_readers_conn.execute('''CREATE TABLE IF NOT EXISTS readers (id integer primary key, name text, email text, password text)''')
+        self.db_readers.commit()
+
+    def insert_readers(self, name, email, password):
+        self.db_readers_conn.execute('''INSERT INTO readers(name, email, password) VALUES (?, ?, ?)''',
+                                     (name, email, password))
+
 if __name__ == "__main__":
     root = tk.Tk()
     db_books = DataBaseBooks()
     db_timetable = DataBaseTimetable()
+    db_readers = DataBaseReaders()
     app = Main(root)
     app.pack()
     root.title("Tiny Library")
