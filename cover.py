@@ -1,10 +1,9 @@
 # Файл с общим этапом после регистрации либо с инфой для читателя
 import tkinter as tk
 from tkinter import ttk
-from tkinter import messagebox
 import sqlite3
-orders = open('orders.db')
-class Main(tk.Frame):
+
+class PageForReaders(tk.Frame):
     def __init__(self, root):
         super().__init__(root)
         self.init_main()
@@ -316,7 +315,7 @@ if __name__ == "__main__":
     db_books = DataBaseBooks()
     db_timetable = DataBaseTimetable()
     db_ordering = DataBaseOrders()
-    app = Main(root)
+    app = PageForReaders(root)
     app.pack()
     root.title("Tiny Library")
     root.geometry("1250x700+180+70")

@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 import sqlite3
 
-class Main(tk.Frame):
+class PageForLibrarians(tk.Frame):
     def __init__(self, root):
         super().__init__(root)
         self.init_main()
@@ -473,7 +473,7 @@ class Main(tk.Frame):
         SearchByStatus()
 
     def open_search_by_dates(self):
-        SearchDates()
+        SearchByDates()
 
     def open_add_libro(self):
         AddTimeLib()
@@ -491,7 +491,7 @@ class Main(tk.Frame):
         UpdateLibrariansInfo()
 
     def open_update_readers(self):
-        UpdateReadersInfo()
+        UpdateTimeLibrariansInfo()
 
     def open_search_libr(self):
         SearchLibrarians()
@@ -573,7 +573,7 @@ class Add_book(tk.Toplevel):
         self.grab_set()
         self.focus_set()
 
-#
+# Перехід на головну сторінку
 class Sign_out(tk.Toplevel):
     def __init__(self):
         super().__init__(root)
@@ -660,7 +660,7 @@ class SearchBooks(tk.Toplevel):
         self.geometry('300x100+400+300')
         self.resizable(False,False)
 
-        label_search = tk.Label(self, text='Пошук автора')
+        label_search = tk.Label(self, text='Пошук видання')
         label_search.place(x=10, y=20)
 
         self.entry_search = ttk.Entry(self)
@@ -684,7 +684,7 @@ class SearchAuthors(tk.Toplevel):
         self.geometry('300x100+400+300')
         self.resizable(False,False)
 
-        label_search = tk.Label(self, text='Пошук видання')
+        label_search = tk.Label(self, text='Пошук автора')
         label_search.place(x=10, y=20)
 
         self.entry_search_2 = ttk.Entry(self)
@@ -698,7 +698,6 @@ class SearchAuthors(tk.Toplevel):
         btn_search.bind('<Button-1>', lambda event: self.view.search_among_authors(self.entry_search_2.get()))
         btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
 
-
 class SearchLibrarians(tk.Toplevel):
     def __init__(self):
         super().__init__()
@@ -709,7 +708,7 @@ class SearchLibrarians(tk.Toplevel):
         self.geometry('300x100+400+300')
         self.resizable(False,False)
 
-        label_search = tk.Label(self, text='Пошук видання')
+        label_search = tk.Label(self, text='Пошук бібліотекаря')
         label_search.place(x=10, y=20)
 
         self.entry_search_2 = ttk.Entry(self)
@@ -733,7 +732,7 @@ class SearchReaders(tk.Toplevel):
         self.geometry('300x100+400+300')
         self.resizable(False,False)
 
-        label_search = tk.Label(self, text='Пошук видання')
+        label_search = tk.Label(self, text='Пошук читача')
         label_search.place(x=10, y=20)
 
         self.entry_search_2 = ttk.Entry(self)
@@ -810,7 +809,7 @@ class UpdateLibrariansInfo(Add_Librarian):
         row = self.db_librarians.db_librarians_conn.fetchone()
         self.entry_name.insert(0,row[1])
 
-class UpdateReadersInfo(Add_Librarian):
+class UpdateTimeLibrariansInfo(Add_Librarian):
     def __init__(self):
         super().__init__()
         self.init_edit()
@@ -959,7 +958,7 @@ class UpdateTimeInfo(AddTimeLib):
             else:
                 self.combobox_sut.current(1)
 
-#
+# Шукати розклад бібліотекаря за розкладом
 class SearchLibrariansTime(tk.Toplevel):
     def __init__(self):
         super().__init__()
@@ -1124,7 +1123,7 @@ class SearchOrder(tk.Toplevel):
         btn_search.bind('<Button-1>', lambda event: self.view.search_in_ord_catalog(self.entry_search_2.get()))
         btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
 
-class SearchDates(tk.Toplevel):
+class SearchByDates(tk.Toplevel):
     def __init__(self):
         super().__init__()
         self.init_search()
@@ -1218,7 +1217,7 @@ if __name__ == "__main__":
     db_librarians = DataBaseLibrarians()
     db_daytime = DataBaseTimetable()
     db_ordering = DataBaseOrders()
-    app = Main(root)
+    app = PageForLibrarians(root)
     app.pack()
     root.title("Tiny Library")
     root.geometry("1250x700+180+70")

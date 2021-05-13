@@ -8,7 +8,7 @@ class Main(tk.Frame):
         super().__init__(root)
         self.init_main()
         self.db_books = db_books
-        self.db_daytime = db_timetable
+        self.db_daytime = db_daytime
         self.db_readers = db_readers
         self.view_timetable()
         self.view_catalog()
@@ -152,7 +152,7 @@ class Main(tk.Frame):
     def open_search_dialog_auth(self):
         SearchAuthors()
 
-#
+# Авторизація
 class Child_login(tk.Toplevel):
     def __init__(self):
         super().__init__(root)
@@ -201,6 +201,7 @@ class Child_login(tk.Toplevel):
         self.grab_set()
         self.focus_set()
 
+# Реєстрація користувачів
 class Registration(tk.Toplevel):
     def __init__(self):
         super().__init__(root)
@@ -254,7 +255,378 @@ class Registration(tk.Toplevel):
         self.focus_set()
 
 
-# Пошук серед книг
+# Додати "замовлення"
+class AddOrder(tk.Toplevel):
+    def __init__(self):
+        super().__init__(root)
+        self.init_add_order()
+        self.view = app
+
+    def init_add_order(self):
+        self.title('Додати замовлення')
+        self.geometry('550x450+550+200')
+        self.resizable(False, False)
+
+        # назви полів вводу
+        label_name = tk.Label(self, text='ПІБ')
+        label_name.place(x=50, y=50)
+        label_book = tk.Label(self, text='Назва книги/журналу')
+        label_book.place(x=50, y=80)
+        label_user_id = tk.Label(self, text='ID користувача')
+        label_user_id.place(x=50, y=110)
+        label_took = tk.Label(self, text='Дата видачі/отримання\nзамовлення')
+        label_took.place(x=50, y=140)
+        label_return = tk.Label(self, text='Дата повернення')
+        label_return.place(x=50, y=180)
+        label_status = tk.Label(self, text='Статус')
+        label_status.place(x=50, y=210)
+
+        self.entry_name = ttk.Entry(self)
+        self.entry_name.place(x=200, y=50)
+
+        self.entry_book = ttk.Entry(self)
+        self.entry_book.place(x=200, y=80)
+
+        self.entry_user_id = ttk.Entry(self)
+        self.entry_user_id.place(x=200, y=110)
+
+        self.entry_took = ttk.Entry(self)
+        self.entry_took.place(x=200, y=145)
+
+        self.entry_return = ttk.Entry(self)
+        self.entry_return.place(x=200, y=180)
+
+        self.combobox_status = ttk.Combobox(self, value=[u'Замовлено', u'Видано', u'Повернуто', u'Затримано'])
+        self.combobox_status.current(0)
+        self.combobox_status.place(x=200, y=210)
+
+        self.btn_add = ttk.Button(self, text='Зберегти')
+        self.btn_add.place(x=220, y=240)
+        self.btn_add.bind('<Button-1>', lambda event: self.view.orders(self.entry_name.get(),
+                                                                       self.entry_book.get(), self.entry_user_id.get(),
+                                                                       self.entry_took.get(), self.entry_return.get(),
+                                                                       self.combobox_status.get()))
+        self.btn_add.bind('<Button-1>', lambda event: self.destroy(), add='+')
+
+        self.grab_set()
+        self.focus_set()
+
+# Додати бібліотекаря до розкладу
+class AddTimeLib(tk.Toplevel):
+    def __init__(self):
+        super().__init__(root)
+        self.init_addlib()
+        self.view = app
+
+    def init_addlib(self):
+        self.title('Редагувати розклад')
+        self.geometry('550x450+550+200')
+        self.resizable(False, False)
+
+        # назви полів вводу
+        label_name = tk.Label(self, text='Бібліотекар')
+        label_name.place(x=50, y=50)
+        label_mon = tk.Label(self, text='Понеділок')
+        label_mon.place(x=50, y=80)
+        label_tue = tk.Label(self, text='Вівторок')
+        label_tue.place(x=50, y=110)
+        label_wen = tk.Label(self, text='Середа')
+        label_wen.place(x=50, y=140)
+        label_thu = tk.Label(self, text='Четвер')
+        label_thu.place(x=50, y=170)
+        label_fri = tk.Label(self, text='Пятниця')
+        label_fri.place(x=50, y=200)
+        label_sut = tk.Label(self, text='Субота')
+        label_sut.place(x=50, y=230)
+
+        self.entry_name = ttk.Entry(self)
+        self.entry_name.place(x=200, y=50)
+
+        self.combobox_mon = ttk.Combobox(self, value=[u'09:00-14:00', u'14:00-19:00', u'-'])
+        self.combobox_mon.current(0)
+        self.combobox_mon.place(x=200, y=80)
+
+        self.combobox_tue = ttk.Combobox(self, value=[u'09:00-14:00', u'14:00-19:00', u'-'])
+        self.combobox_tue.current(0)
+        self.combobox_tue.place(x=200, y=110)
+
+        self.combobox_wen = ttk.Combobox(self, value=[u'09:00-14:00', u'14:00-19:00', u'-'])
+        self.combobox_wen.current(0)
+        self.combobox_wen.place(x=200, y=140)
+
+        self.combobox_thu = ttk.Combobox(self, value=[u'09:00-14:00', u'14:00-19:00', u'-'])
+        self.combobox_thu.current(0)
+        self.combobox_thu.place(x=200, y=170)
+
+        self.combobox_fri = ttk.Combobox(self, value=[u'09:00-14:00', u'14:00-19:00', u'-'])
+        self.combobox_fri.current(0)
+        self.combobox_fri.place(x=200, y=200)
+
+        self.combobox_sut = ttk.Combobox(self, value=[u'10:00-14:00', u'14:00-18:00', u'-'])
+        self.combobox_sut.current(0)
+        self.combobox_sut.place(x=200, y=230)
+
+        self.btn_add = ttk.Button(self, text='Зберегти')
+        self.btn_add.place(x=220, y=260)
+        self.btn_add.bind('<Button-1>', lambda event: self.view.timetable(self.entry_name.get(),
+                                                                          self.combobox_mon.get(),
+                                                                          self.combobox_tue.get(),
+                                                                          self.combobox_wen.get(),
+                                                                          self.combobox_thu.get(),
+                                                                          self.combobox_fri.get(),
+                                                                          self.combobox_sut.get()))
+        self.btn_add.bind('<Button-1>', lambda event: self.destroy(), add='+')
+
+        self.grab_set()
+        self.focus_set()
+
+# Додати дані бібілотекаря для входу в систему
+class Add_Librarian(tk.Toplevel):
+    def __init__(self):
+        super().__init__(root)
+        self.init_child()
+        self.view = app
+
+    def init_child(self):
+        self.title('Додати бібліотекаря')
+        self.geometry('550x450+550+200')
+        self.resizable(False, False)
+
+        # назви полів вводу
+        label_name = tk.Label(self, text='ПІБ')
+        label_name.place(x=50, y=50)
+        label_email = tk.Label(self, text='Email')
+        label_email.place(x=50, y=80)
+        label_password = tk.Label(self, text='Пароль')
+        label_password.place(x=50, y=110)
+
+        self.entry_name = ttk.Entry(self)
+        self.entry_name.place(x=200, y=50)
+
+        self.entry_email = ttk.Entry(self)
+        self.entry_email.place(x=200, y=80)
+
+        self.entry_password = ttk.Entry(self)
+        self.entry_password.place(x=200, y=110)
+
+        self.btn_add = ttk.Button(self, text='Додати')
+        self.btn_add.place(x=220, y=140)
+        self.btn_add.bind('<Button-1>',
+                          lambda event: self.view.librarians(self.entry_name.get(), self.entry_email.get(),
+                                                             self.entry_password.get()))
+
+        self.btn_add.bind('<Button-1>', lambda event: self.destroy(), add='+')
+
+        self.grab_set()
+        self.focus_set()
+
+# Додати книгу до каталогу видань
+class Add_book(tk.Toplevel):
+    def __init__(self):
+        super().__init__(root)
+        self.init_child()
+        self.view = app
+
+    def init_child(self):
+        self.title('Нове надходження')
+        self.geometry('550x450+550+200')
+        self.resizable(False, False)
+
+        # назви полів вводу
+        label_name = tk.Label(self, text='Назва')
+        label_name.place(x=50, y=50)
+        label_author = tk.Label(self, text='Автор')
+        label_author.place(x=50, y=80)
+        label_type = tk.Label(self, text='Тип')
+        label_type.place(x=50, y=110)
+        label_catagory = tk.Label(self, text='Категорія')
+        label_catagory.place(x=50, y=140)
+        label_hall = tk.Label(self, text='Читальний зал')
+        label_hall.place(x=50, y=170)
+
+        self.entry_name = ttk.Entry(self)
+        self.entry_name.place(x=200, y=50)
+
+        self.entry_author = ttk.Entry(self)
+        self.entry_author.place(x=200, y=80)
+
+        self.combobox_type = ttk.Combobox(self, value=[u'Книга', u'Журнал'])
+        self.combobox_type.current(0)
+        self.combobox_type.place(x=200, y=110)
+
+        self.combobox_catagory = ttk.Combobox(self, value=[u'Детективи', u'Дитяче', u'Іноземна класика', u'Історія',
+                                                           u'Мода', u'Наукове', u'Психологія', u'Українська класика',
+                                                           u'Фантастика', u'Фентезі', u'Філософія'])
+        self.combobox_catagory.current(0)
+        self.combobox_catagory.place(x=200, y=140)
+
+        self.combobox_hall = ttk.Combobox(self, value=[u'№ 1', u'№ 2', u'№ 3', u'№ 4', u'№ 5'])
+        self.combobox_hall.current(0)
+        self.combobox_hall.place(x=200, y=170)
+
+        '''btn_cancel = ttk.Button(self, text='Out'))
+        btn_cancel.place(x=300, y=80)'''  # кнопка выхода
+
+        self.btn_add = ttk.Button(self, text='Додати')
+        self.btn_add.place(x=220, y=200)
+        self.btn_add.bind('<Button-1>', lambda event: self.view.catalog(self.entry_name.get(), self.entry_author.get(),
+                                                                         self.combobox_type.get(),
+                                                                         self.combobox_catagory.get(),
+                                                                         self.combobox_hall.get()))
+        self.btn_add.bind('<Button-1>', lambda event: self.destroy(), add='+')
+
+        self.grab_set()
+        self.focus_set()
+
+
+#Редакція даних замовлень/формулярів
+class UpdateOrderInfo(AddOrder):
+    def __init__(self):
+        super().__init__()
+        self.init_edit()
+        self.view = app
+        self.db_orders = db_ordering
+        self.default_data()
+
+    def init_edit(self):
+        self.title('Редагувати дані розкладу')
+        btn_edit = ttk.Button(self, text='Редагувати')
+        btn_edit.place(x=220, y=260)
+        btn_edit.bind('<Button>', lambda event: self.view.update_order(self.entry_name.get(),
+                                                                       self.entry_book.get(), self.entry_user_id.get(),
+                                                                       self.entry_took.get(), self.entry_return.get(),
+                                                                       self.combobox_status.get()))
+        self.btn_add.destroy()
+
+    def default_data(self):
+        self.db_orders.db_orders_conn.execute('''SELECT * FROM orders WHERE ID=?''',
+                                               (self.view.tree_orders.set(self.view.tree_orders.selection()[0],'#1')))
+        row = self.db_orders.db_orders_conn.fetchone()
+        self.entry_name.insert(0,row[1])
+        self.entry_book.insert(0, row[2])
+        self.entry_user_id.insert(0, row[3])
+        self.entry_took.insert(0, row[4])
+        self.entry_return.insert(0, row[5])
+        if row[6] != 'Замовлено':
+            self.combobox_status.current(0)
+
+#Редакція даних бібліотекарів
+class UpdateTimeInfo(AddTimeLib):
+    def __init__(self):
+        super().__init__()
+        self.init_edit()
+        self.view = app
+        self.db_daytime = db_daytime
+        self.default_data()
+
+    def init_edit(self):
+        self.title('Редагувати дані розкладу')
+        btn_edit = ttk.Button(self, text='Редагувати')
+        btn_edit.place(x=220, y=260)
+        btn_edit.bind('<Button>', lambda event: self.view.update_timetable(self.entry_name.get(),
+                                                                           self.combobox_mon.get(),
+                                                                           self.combobox_tue.get(),
+                                                                           self.combobox_wen.get(),
+                                                                           self.combobox_thu.get(),
+                                                                           self.combobox_fri.get(),
+                                                                           self.combobox_sut.get()))
+        self.btn_add.destroy() # нужно подумать как закрыть это окно при этом нормально отредактировав
+
+# Редагувати дані робочого графіку бібліотекаря
+class UpdateTimeLibrariansInfo(Add_Librarian):
+    def __init__(self):
+        super().__init__()
+        self.init_edit()
+        self.view = app
+        self.db_readers = db_readers
+        self.default_data()
+
+    def init_edit(self):
+        self.title('Редагувати дані\nчитача')
+        btn_edit = ttk.Button(self, text='Редагувати')
+        btn_edit.place(x=220, y=200)
+        btn_edit.bind('<Button>',
+                      lambda event: self.view.update_readers_acc(self.entry_name.get(), self.entry_email.get(),
+                                                                 self.entry_password.get()))
+        self.btn_add.destroy()
+
+    def default_data(self):
+        self.db_readers.db_readers_conn.execute('''SELECT * FROM readers WHERE ID=?''',
+                                                (self.view.tree_readers.set(self.view.tree_readers.selection()[0],
+                                                                            '#1')))
+        row = self.db_readers.db_readers_conn.fetchone()
+        self.entry_name.insert(0, row[1])
+
+    def default_data(self):
+        self.db_daytime.db_timetable_conn.execute('''SELECT * FROM timetable WHERE ID=?''',
+                                                  (self.view.tree_time.set(self.view.tree_time.selection()[0], '#1')))
+        row = self.db_daytime.db_timetable_conn.fetchone()
+        self.entry_name.insert(0,row[1])
+        if row[2] != '09:00-14:00':
+            if row[2] != '14:00-19:00':
+                self.combobox_mon.current(2)
+            else:
+                self.combobox_mon.current(1)
+        if row[3] != '09:00-14:00':
+            if row[3] != '14:00-19:00':
+                self.combobox_tue.current(2)
+            else:
+                self.combobox_tue.current(1)
+        if row[4] != '09:00-14:00':
+            if row[4] != '14:00-19:00':
+                self.combobox_wen.current(2)
+            else:
+                self.combobox_wen.current(1)
+        if row[5] != '09:00-14:00':
+            if row[5] != '14:00-19:00':
+                self.combobox_thu.current(2)
+            else:
+                self.combobox_thu.current(1)
+        if row[6] != '09:00-14:00':
+            if row[6] != '14:00-19:00':
+                self.combobox_fri.current(2)
+            else:
+                self.combobox_fri.current(1)
+        if row[7] != '10:00-14:00':
+            if row[7] != '14:00-18:00':
+                self.combobox_sut.current(2)
+            else:
+                self.combobox_sut.current(1)
+
+#Редакція даних видань в каталозі
+class UpdateBookInfo(Add_book):
+    def __init__(self):
+        super().__init__()
+        self.init_edit()
+        self.view = app
+        self.db_books =db_books
+        self.default_data()
+
+    def init_edit(self):
+        self.title('Редагувати дані книги')
+        btn_edit = ttk.Button(self, text='Редагувати')
+        btn_edit.place(x=220, y=200)
+        btn_edit.bind('<Button>', lambda event: self.view.update_catalog(self.entry_name.get(), self.entry_author.get(),
+                                                                         self.combobox_type.get(),
+                                                                         self.combobox_catagory.get(),
+                                                                         self.combobox_hall.get()))
+        self.btn_add.destroy() # нужно подумать как закрыть это окно при этом нормально отредактировав
+
+    def default_data(self):
+        self.db_books.db_books_conn.execute('''SELECT * FROM books WHERE ID=?''',
+                                            (self.view.tree.set(self.view.tree.selection()[0],'#1')))
+        row = self.db_books.db_books_conn.fetchone()
+        self.entry_name.insert(0,row[1])
+        if row[3] != 'Книга':
+            self.combobox_type.current(1)
+
+        self.entry_author.insert(0,row[2])
+        self.num_box_cata = self.combobox_catagory.get()
+        # нужно придумать как правильно вывести оставшиеся комбобоксы
+
+
+
+# Пошук серед книг у каталозі
 class SearchBooks(tk.Toplevel):
     def __init__(self):
         super().__init__()
@@ -279,6 +651,7 @@ class SearchBooks(tk.Toplevel):
         btn_search.bind('<Button-1>', lambda event: self.view.search_in_catalog(self.entry_search.get()))
         btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
 
+# Пошук у каталозі за автором
 class SearchAuthors(tk.Toplevel):
     def __init__(self):
         super().__init__()
@@ -306,6 +679,134 @@ class SearchAuthors(tk.Toplevel):
         btn_search.bind('<Button-1>', lambda event: self.view.search_among_authors(self.entry_search_2.get()))
         btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
 
+# Пошук формулярів за датою отримання (контроль видачі книг)
+class SearchByDates(tk.Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.init_search()
+        self.view = app
+
+    def init_search(self):
+        self.geometry('300x100+400+300')
+        self.resizable(False,False)
+
+        label_search = tk.Label(self, text='Пошук за датою')
+        label_search.place(x=10, y=20)
+
+        self.entry_search_2 = ttk.Entry(self)
+        self.entry_search_2.place(x=105, y=20, width=150)
+
+        btn_cancel = ttk.Button(self, text='Закрити', command=self.destroy)
+        btn_cancel.place(x=185, y=50)
+
+        btn_search = ttk.Button(self, text='Пошук')
+        btn_search.place(x=105, y=50)
+        btn_search.bind('<Button-1>', lambda event: self.view.search_among_dates(self.entry_search_2.get()))
+        btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
+
+#Пошук формулярів за статусом (відслідковування заборгованностей)
+class SearchByStatus(tk.Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.init_search()
+        self.view = app
+
+    def init_search(self):
+        self.geometry('300x100+600+300')
+        self.resizable(False,False)
+
+        label_search = tk.Label(self, text='Пошук\nзаборгованостей')
+        label_search.place(x=10, y=20)
+
+        self.search_status = ttk.Combobox(self, value=[u'Замовлено', u'Видано', u'Повернуто', u'Затримано'])
+        self.search_status.current(0)
+        self.search_status.place(x=105, y=20, width=150)
+
+        btn_cancel = ttk.Button(self, text='Закрити', command=self.destroy)
+        btn_cancel.place(x=185, y=50)
+
+        btn_search = ttk.Button(self, text='Пошук')
+        btn_search.place(x=105, y=50)
+        btn_search.bind('<Button-1>', lambda event: self.view.search_among_orders_status(self.search_status.get()))
+        btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
+
+# Шукати розклад бібліотекаря за розкладом
+class SearchLibrariansTime(tk.Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.init_search()
+        self.view = app
+
+    def init_search(self):
+        self.geometry('300x100+400+300')
+        self.resizable(False,False)
+
+        label_search = tk.Label(self, text='Пошук бібліотекаря')
+        label_search.place(x=10, y=20)
+
+        self.entry_search_2 = ttk.Entry(self)
+        self.entry_search_2.place(x=105, y=20, width=150)
+
+        btn_cancel = ttk.Button(self, text='Закрити', command=self.destroy)
+        btn_cancel.place(x=185, y=50)
+
+        btn_search = ttk.Button(self, text='Пошук')
+        btn_search.place(x=105, y=50)
+        btn_search.bind('<Button-1>', lambda event: self.view.search_among_librarians_time(self.entry_search_2.get()))
+        btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
+
+# Пошук діних бібліотекаря
+class SearchLibrarians(tk.Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.init_search()
+        self.view = app
+
+    def init_search(self):
+        self.geometry('300x100+400+300')
+        self.resizable(False,False)
+
+        label_search = tk.Label(self, text='Пошук бібліотекаря')
+        label_search.place(x=10, y=20)
+
+        self.entry_search_2 = ttk.Entry(self)
+        self.entry_search_2.place(x=105, y=20, width=150)
+
+        btn_cancel = ttk.Button(self, text='Закрити', command=self.destroy)
+        btn_cancel.place(x=185, y=50)
+
+        btn_search = ttk.Button(self, text='Пошук')
+        btn_search.place(x=105, y=50)
+        btn_search.bind('<Button-1>', lambda event: self.view.search_among_librarians_acc(self.entry_search_2.get()))
+        btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
+
+# Пошук даних зареєстрованих читачів
+class SearchReaders(tk.Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.init_search()
+        self.view = app
+
+    def init_search(self):
+        self.geometry('300x100+400+300')
+        self.resizable(False,False)
+
+        label_search = tk.Label(self, text='Пошук читача')
+        label_search.place(x=10, y=20)
+
+        self.entry_search_2 = ttk.Entry(self)
+        self.entry_search_2.place(x=105, y=20, width=150)
+
+        btn_cancel = ttk.Button(self, text='Закрити', command=self.destroy)
+        btn_cancel.place(x=185, y=50)
+
+        btn_search = ttk.Button(self, text='Пошук')
+        btn_search.place(x=105, y=50)
+        btn_search.bind('<Button-1>', lambda event: self.view.search_among_readers_acc(self.entry_search_2.get()))
+        btn_search.bind('<Button-1>', lambda event: self.destroy(), add='+')
+
+
+
 # база даних для книг
 class DataBaseBooks:
     def __init__(self):
@@ -332,6 +833,7 @@ class DataBaseTimetable:
                                    (name, monday, tuesday, wendsday, thursday, friday, saturday))
         self.db_timetable.commit()
 
+# База даних зареєстрованих читачів
 class DataBaseReaders:
     def __init__(self):
         self.db_readers = sqlite3.connect('readers.db')
@@ -343,11 +845,39 @@ class DataBaseReaders:
         self.db_readers_conn.execute('''INSERT INTO readers(name, email, password) VALUES (?, ?, ?)''',
                                      (name, email, password))
 
+# База даних бібліотекарів
+class DataBaseLibrarians:
+    def __init__(self):
+        self.db_librarians = sqlite3.connect('librarians.db')
+        self.db_librarians_conn = self.db_librarians.cursor()
+        self.db_librarians_conn.execute('''CREATE TABLE IF NOT EXISTS librarians (id integer primary key, name text, email text, password text)''')
+        self.db_librarians.commit()
+
+    def insert_librarians(self, name, email, password):
+        self.db_librarians_conn.execute('''INSERT INTO librarians(name, email, password) VALUES (?, ?, ?)''',
+                                        (name, email, password))
+
+# база даних формулярів
+class DataBaseOrders:
+    def __init__(self):
+        self.db_orders = sqlite3.connect('orders.db')
+        self.db_orders_conn = self.db_orders.cursor()
+        self.db_orders_conn.execute('''CREATE TABLE IF NOT EXISTS orders (id integer primary key, name text, book text, user_id integer, took text, need_return text, status text)''')
+        self.db_orders.commit()
+
+    def insert_order(self, name, book, user_id, took, need_return, status):
+        self.db_orders_conn.execute('''INSERT INTO orders(name, book, user_id, took, need_return, status) VALUES (?, ?, ?, ?, ?, ?)''',
+                                    (name, book, user_id, took, need_return, status))
+        self.db_orders.commit()
+
+
 if __name__ == "__main__":
     root = tk.Tk()
     db_books = DataBaseBooks()
-    db_timetable = DataBaseTimetable()
+    db_daytime = DataBaseTimetable()
     db_readers = DataBaseReaders()
+    db_librarians = DataBaseLibrarians()
+    db_ordering = DataBaseOrders()
     app = Main(root)
     app.pack()
     root.title("Tiny Library")
