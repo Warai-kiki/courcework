@@ -21,8 +21,8 @@ class PageForReaders(tk.Frame):
         toolbar.pack(side=tk.TOP, fill=tk.X)
 
         # entering in the system
-        self.add_img_2 = tk.PhotoImage(file='enter-2.png')  # adding button pic
-        btn_open_adding = tk.Button(toolbar, text='Вхід', command=self.take_order, bg='#D19440', bd=1,
+        self.add_img_2 = tk.PhotoImage(file='sign_out.png')  # adding button pic
+        btn_open_adding = tk.Button(toolbar, text='Вихід', command=self.take_order, bg='#D19440', bd=1,
                                     compound=tk.TOP, image=self.add_img_2)
         btn_open_adding.pack(side=tk.LEFT)
 
@@ -158,6 +158,10 @@ class PageForReaders(tk.Frame):
 
     def open_search_dialog_auth(self):
         SearchAuthors()
+
+    def pack(self):
+        pass
+
 
 #
 class AddOrder(tk.Toplevel):

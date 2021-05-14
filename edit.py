@@ -21,6 +21,7 @@ class PageForLibrarians(tk.Frame):
 
         self.root = root
 
+
     def init_librarian_page(self):
         toolbar = tk.Frame(bg='#EAC38D', bd=5)
         toolbar.pack(side=tk.TOP, fill=tk.X)
@@ -778,7 +779,7 @@ class Add_Librarian(tk.Toplevel):
         self.btn_add = ttk.Button(self, text='Додати')
         self.btn_add.place(x=220, y=140)
         self.btn_add.bind('<Button-1>',
-                          lambda event: self.view.librarians(self.entry_name.get(), self.entry_email.get(),
+                          lambda event: self.view.librarians_acc(self.entry_name.get(), self.entry_email.get(),
                                                              self.entry_password.get()))
 
         self.btn_add.bind('<Button-1>', lambda event: self.destroy(), add='+')
@@ -809,7 +810,7 @@ class UpdateLibrariansInfo(Add_Librarian):
         row = self.db_librarians.db_librarians_conn.fetchone()
         self.entry_name.insert(0,row[1])
 
-'''class UpdateTimeReadersInfo(Add):
+class UpdateTimeReadersInfo(Add_Librarian):
     def __init__(self):
         super().__init__()
         self.init_edit()
@@ -826,10 +827,10 @@ class UpdateLibrariansInfo(Add_Librarian):
         self.btn_add.destroy()
 
     def default_data(self):
-        self.db_readers.db_readers_conn.execute('''''''SELECT * FROM readers WHERE ID=?'''''',
+        self.db_readers.db_readers_conn.execute('''SELECT * FROM readers WHERE ID=?''',
                                                  (self.view.tree_readers.set(self.view.tree_readers.selection()[0],'#1')))
         row = self.db_readers.db_readers_conn.fetchone()
-        self.entry_name.insert(0,row[1])'''
+        self.entry_name.insert(0,row[1])
 
 # Додати бібліотекаря
 class AddTimeLib(tk.Toplevel):
@@ -1221,7 +1222,6 @@ if __name__ == "__main__":
     app.pack()
     root.title("Tiny Library")
     root.geometry("1250x700+180+70")
-    # root.protocol('WM_DELETE_WINDOW', window_deleted)
     root.resizable(False, False)
     root.iconbitmap("library_3978.ico")
     root.mainloop()
