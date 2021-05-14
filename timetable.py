@@ -3,7 +3,7 @@ from tkinter import ttk
 import sqlite3
 
 # розклад роботи
-class Main(tk.Frame):
+class TimeTablePage(tk.Frame):
     def __init__(self, root):
         super().__init__(root)
         self.init_main()
@@ -286,7 +286,7 @@ class DataBaseTimetable:
 if __name__ == "__main__":
     root = tk.Tk()
     db_daytime = DataBaseTimetable()
-    app = Main(root)
+    app = TimeTablePage(root)
     app.pack()
     root.title("Tiny Library")
     root.geometry("1250x700+180+70")

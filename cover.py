@@ -6,7 +6,7 @@ import sqlite3
 class PageForReaders(tk.Frame):
     def __init__(self, root):
         super().__init__(root)
-        self.init_main()
+        self.init_reader_page()
         self.db_books = db_books
         self.db_daytime = db_timetable
         self.db_order = db_ordering
@@ -16,7 +16,7 @@ class PageForReaders(tk.Frame):
 
         self.root = root
 
-    def init_main(self):
+    def init_reader_page(self):
         toolbar = tk.Frame(bg='#EAC38D', bd=5)
         toolbar.pack(side=tk.TOP, fill=tk.X)
 

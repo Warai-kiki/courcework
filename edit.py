@@ -6,7 +6,7 @@ import sqlite3
 class PageForLibrarians(tk.Frame):
     def __init__(self, root):
         super().__init__(root)
-        self.init_main()
+        self.init_librarian_page()
         self.db_books = db_books
         self.db_readers = db_readers
         self.db_librarians = db_librarians
@@ -21,7 +21,7 @@ class PageForLibrarians(tk.Frame):
 
         self.root = root
 
-    def init_main(self):
+    def init_librarian_page(self):
         toolbar = tk.Frame(bg='#EAC38D', bd=5)
         toolbar.pack(side=tk.TOP, fill=tk.X)
 
@@ -99,7 +99,7 @@ class PageForLibrarians(tk.Frame):
         btn_refresh.place(x=1160, y=130)
 
         # adding book button pic
-        btn_open_adding = tk.Button(self.tab_3_lib, text='Додати книгу', command=self.open_adding, bg='#D19440', bd=1,
+        btn_open_adding = tk.Button(self.tab_3_lib, text='Додати видання', command=self.open_adding, bg='#D19440', bd=1,
                                     compound=tk.TOP, image=self.add_img)
         btn_open_adding.place(x=0, y=4)
         # update button
@@ -147,7 +147,7 @@ class PageForLibrarians(tk.Frame):
         btn_refresh.place(x=1150, y=130)
 
         # adding book for order
-        btn_open_adding = tk.Button(self.tab_5_lib, text='Додати книгу', command=self.open_add_order, bg='#D19440', bd=1,
+        btn_open_adding = tk.Button(self.tab_5_lib, text='Додати видання', command=self.open_add_order, bg='#D19440', bd=1,
                                     compound=tk.TOP, image=self.add_img)
         btn_open_adding.place(x=0, y=4)
         # update button for order
@@ -491,7 +491,7 @@ class PageForLibrarians(tk.Frame):
         UpdateLibrariansInfo()
 
     def open_update_readers(self):
-        UpdateTimeLibrariansInfo()
+        UpdateTimeReadersInfo()
 
     def open_search_libr(self):
         SearchLibrarians()
@@ -587,7 +587,7 @@ class Sign_out(tk.Toplevel):
             info_str = f'Щось пішло не так. Спробуйте ще раз.'
             messagebox.showinfo(title='Login', message=info_str)
         else:
-            info_str = f'Дані: {str(login)}, {str(password)}'
+            info_str = f'Успішний вхід'
             messagebox.showinfo(title='Login', message=info_str)
 
         # вікно з помилкою
@@ -809,7 +809,7 @@ class UpdateLibrariansInfo(Add_Librarian):
         row = self.db_librarians.db_librarians_conn.fetchone()
         self.entry_name.insert(0,row[1])
 
-class UpdateTimeLibrariansInfo(Add_Librarian):
+'''class UpdateTimeReadersInfo(Add):
     def __init__(self):
         super().__init__()
         self.init_edit()
@@ -826,10 +826,10 @@ class UpdateTimeLibrariansInfo(Add_Librarian):
         self.btn_add.destroy()
 
     def default_data(self):
-        self.db_readers.db_readers_conn.execute('''SELECT * FROM readers WHERE ID=?''',
+        self.db_readers.db_readers_conn.execute('''''''SELECT * FROM readers WHERE ID=?'''''',
                                                  (self.view.tree_readers.set(self.view.tree_readers.selection()[0],'#1')))
         row = self.db_readers.db_readers_conn.fetchone()
-        self.entry_name.insert(0,row[1])
+        self.entry_name.insert(0,row[1])'''
 
 # Додати бібліотекаря
 class AddTimeLib(tk.Toplevel):
@@ -1049,7 +1049,7 @@ class UpdateOrderInfo(AddOrder):
         self.default_data()
 
     def init_edit(self):
-        self.title('Редагувати дані розкладу')
+        self.title('Редагувати дані замовлення')
         btn_edit = ttk.Button(self, text='Редагувати')
         btn_edit.place(x=220, y=260)
         btn_edit.bind('<Button>', lambda event: self.view.update_order(self.entry_name.get(),
