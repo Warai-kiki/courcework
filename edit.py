@@ -233,7 +233,7 @@ class PageForLibrarians(tk.Frame):
         self.tree_readers.column('email', width=400, anchor=tk.CENTER)
 
         self.tree_readers.heading('ID', text='ID')
-        self.tree_readers.heading('name', text='Назва')
+        self.tree_readers.heading('name', text='ПІБ')
         self.tree_readers.heading('email', text='Email')
 
         self.tree_readers.place(x=170, y=4, height=670)

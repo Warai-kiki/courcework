@@ -96,10 +96,13 @@ class Main(tk.Frame):
         self.tree_time.heading('thursday', text='Черверг')
         self.tree_time.heading('friday', text='Пятниця')
         self.tree_time.heading('saturday', text='Субота')
+
         self.tree_time.pack(side=tk.LEFT)
+
         scroll = tk.Scrollbar(self, command=self.tree_time.yview)
         scroll.pack(side=tk.LEFT, fill=tk.Y)
         self.tree_time.configure(yscrollcommand=scroll.set)
+
     def catalog(self, name, author, type, category, readinghall):
         self.db_books.insert_books(name, author, type, category, readinghall)
         self.view_catalog()
@@ -126,12 +129,14 @@ class Main(tk.Frame):
         [self.tree.insert('', 'end', values=row) for row in self.db_books.db_books_conn.fetchall()]
 
     def open_registration(self):
-        edit.Registration()
+        Registration()
 
     def open_login(self):
         Child_login()
+
     def open_search_dialog(self):
         SearchBooks()
+
     def open_search_dialog_auth(self):
         SearchAuthors()
 #
@@ -185,7 +190,7 @@ class Child_login(tk.Toplevel):
         self.grab_set()
         self.focus_set()
 
-'''class Registration(tk.Toplevel):
+class Registration(tk.Toplevel):
     def __init__(self):
         super().__init__(root)
         self.registration()
@@ -234,11 +239,11 @@ class Child_login(tk.Toplevel):
         self.btn_registration = tk.Button(self.frame, text='Реєстрація', bg='#79350B', command=self.btn_click)
         self.btn_registration.place(x=120, y=130)
 
-        self.btn_registr = tk.Button('<Button-1>', lambda event: self.view.reders_)
+        self.btn_registr = tk.Button('<Button-1>', lambda event: self.view.readers_)
         self.btn_registr.bind('<Button-1>', lambda event: self.destroy(), add='+')
 
         self.grab_set()
-        self.focus_set()'''
+        self.focus_set()
 
 # Пошук серед книг
 class SearchBooks(tk.Toplevel):
